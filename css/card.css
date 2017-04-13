@@ -1,0 +1,91 @@
+body {
+    font-size: 11pt;
+}
+
+
+/*
+#cardBody {
+    margin: 10px;
+    height: 300px;
+    width: 200px;
+    padding:10px;
+    border-radius: 10px;
+    border-color: antiquewhite;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0px 2px 10px rgba(100, 50, 0, 0.5);
+    display: table;
+    text-align: center;
+}
+*/
+
+
+/*auxilary element for aligning list items*/
+
+#alignmentBar {
+    display: table-cell;
+    font-size: 0.1em;
+    height: 0%;
+    /*!important is needed, otherwise :hover will turn the texts white*/
+    color: transparent !important;
+    padding: 0;
+    margin: 0;
+}
+
+#cardName {
+    font-family: "Agency FB", sans-serif;
+    font-size: 1.5em;
+    font-weight: bolder;
+    display: table-row;
+    height: 15%;
+}
+
+#cardName td {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#cardArtContainer {
+    display: table-row;
+}
+
+#cardArt {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(160, 160, 160, 0.8);
+    box-shadow: 0 0px 50px 10px rgba(50, 20, 0, 0.1);
+    background-clip: inherit;
+    background-image: url("../img/default.jpg");
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    margin: auto;
+    transition: all 0.8s;
+    /*3D acceleration speed hack*/
+    transform: translateZ(0);
+}
+
+
+/*realized in parent hover*/
+
+
+/*
+#cardArt:hover {
+    border-width: 1px;
+    border-color: rgba(100, 220, 120, 0.9);
+    box-shadow: 0 0 50px 10px rgba(50, 220, 0, 0.3), inset 0 0 0 10px rgba(100, 220, 120, 0.3), inset 0 0 20px 20px rgba(100, 220, 120, 0.3);
+}
+*/
+
+#cardText {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    display: table-row;
+    color: darkslateblue;
+    height: 25%;
+    padding-top: 10px;
+}

@@ -1,0 +1,1 @@
+Rename data into cards.csv. This file is always the one used by the app.

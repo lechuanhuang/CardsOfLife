@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cards of Life with Javascript (D3)</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
+    <link rel="stylesheet" type="text/css" href="css/card.css">
+    <link rel="stylesheet" type="text/css" href="css/mySortable.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src='js/jquery.mousewheel.min.js'></script>
+    <script src="js/jquery.ui.touch-punch.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!--drop between lists-->
+    <script>
+        $(function () {
+            $("ul.droptrue").sortable({
+                connectWith: "ul"
+            });
+            $("ul.dropfalse").sortable({
+                connectWith: "ul"
+                , dropOnEmpty: false
+            });
+            $("#sortable1, #sortable3").disableSelection();
+        });
+        //following two blocks added to keep count; http://jsfiddle.net/3xnL7zko/2/
+        function update_counts() {
+            var n_ul1 = $("#sortable1 li").length;
+            var n_ul3 = $("#sortable3 li").length;
+            $("#count1").html(n_ul1);
+            $("#count3").html(n_ul3);
+        }
+        $(function () {
+            $("#sortable3,#sortable1").droppable({
+                over: function (ev, ui) {
+                    update_counts();
+                }
+                , drop: function (ev, ui) {
+                    update_counts();
+                }
+            }).disableSelection();
+        });
+    </script>
+    <!--horizontal scrolling-->
+    <script>
+        $(function () {
+            $("#sortable1, #sortable3").mousewheel(function (event, delta) {
+                this.scrollLeft -= (delta * 30);
+                event.preventDefault();
+            });
+        });
+    </script>
+    <!--saving; not working yet-->
+    <script>
+        $(function () {
+            $("#sortable1, #sortable3").sortable({
+                update: function (event, ui) {
+                    var order = $(this).sortable('serialize');
+                    $(document).on("click", "#saveList", function () { //that doesn't work
+                        $.ajax({
+                            data: order
+                            , type: 'POST'
+                            , url: 'saverank.php'
+                        });
+                    });
+                }
+            }).disableSelection();
+            $('#saveList').on('click', function () {
+                var r = $("#sortable1, #sortable3").sortable("toArray");
+                var a = $("#sortable1, #sortable3").sortable("serialize", {
+                    attribute: "id"
+                });
+                console.log(r, a);
+            });
+        });
+    </script>
+    <!--path to make :active work in firefox; see: https://bugs.jqueryui.com/ticket/10671-->
+    <!--
+    <script>
+        $.widget("ui.droptrue", $.ui.sortable, {
+            _create: function () {
+                this._super();
+                this._on(this.element, {
+                    "mousedown > *": function (event) {
+                        $(event.target).addClass("ui-sortable-active");
+                    },
+                    "sortstop": function (event, ui) {
+                        $(ui.item).removeClass("ui-sortable-active");
+                    }
+                });
+            }
+        });
+        
+        $( "#sortable1, #sortable3" ).sortable();
+    </script>
+    -->
+    <!--the following may not work in the header because getElementById may be referring to an element that's yet to be created by DOM-->
+    <!--
+    <script>
+        d3.csv("data/cardsHeaders.csv", function (data) {
+            //console.log(data[1]);
+            document.getElementById("cardName").innerHTML = "<td>" + data[1].Task + "</td>";
+            document.getElementById("cardArt").style = "background-image:url(" + data[1].Image + ")";
+            document.getElementById("cardText").innerHTML = data[1].Description;
+        });
+    </script>
+-->
+</head>
+
+<body>
+    <div id="scaler">
+        <div id="menu">
+            <button id="saveList">Save</button> <span>Top deck count: </span><span id="count3">0</span><span>Bottom deck count: </span><span id="count1">15</span> </div>
+        <ul id="sortable3" class="droptrue">
+            <!--<li class="ui-state-default">
+                <div class="cordContent">Placeholder</div>
+            </li>-->
+        </ul>
+        <div class="middleLine" style="clear:both;"></div>
+        <ul id="sortable1" class="droptrue">
+            <!--
+            <li class="ui-state-default">
+                <div class="cardContent">
+                    <div id="alignmentBar">---</div>
+                    <div id="cardName">
+                        <td>Default task</td>
+                    </div>
+                    <div id="cardArtContainer">
+                        <div id="cardArt" style="background-image:url(img/defaultNew.jpg)"></div>
+                    </div>
+                    <div id="cardText">Default description.</div>
+                </div>
+            </li>
+-->
+            <!--<li class="ui-state-default">
+                <div class="cardContent">default string</div>
+            </li>-->
+        </ul>
+        <br style="clear:both"> </div>
+    <script>
+        d3.csv("data/cards.csv", function (data) {
+            //console.log(data);
+            var len = data.length;
+            for (var i = 0; i < len; i++) {
+                //console.log(data[i]);
+                if (data[i].Image == "") {
+                    var image = "img/default.jpg";
+                }
+                else {
+                    var image = data[i].Image;
+                }
+                $("#sortable1").append('<li class="ui-state-default"><div class="cardContent"><div id="alignmentBar">---</div><div id="cardName"><td>' + data[i].Task + '</td></div><div id="cardArtContainer"><div id="cardArt" style="background-image:url(' + image + ')"></div></div><div id="cardText">' + data[i].Description + '</div></div></li>');
+            }
+        });
+    </script>
+</body>
+
+</html>
